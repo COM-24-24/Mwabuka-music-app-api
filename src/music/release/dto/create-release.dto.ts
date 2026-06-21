@@ -6,8 +6,8 @@ import {
   IsUrl,
 } from 'class-validator';
 
-import { ReleaseType } from '../enums/release-type.enum';
-import { ReleaseStatus } from '../enums/release-status.enum';
+import { ReleaseType } from '../../enums/release-type.enum';
+import { ReleaseStatus } from '../../enums/release-status.enum';
 
 export class CreateReleaseDto {
   @IsString()

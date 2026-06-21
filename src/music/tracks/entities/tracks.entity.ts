@@ -5,7 +5,7 @@ import { Column,
         OneToMany,  
         ManyToOne
     } from 'typeorm';
-import { Album } from './album.entity';
+import { Release } from '../../release/entites/release.entity';
 
 @Entity('tracks')
 export class Tracks {
@@ -25,7 +25,7 @@ export class Tracks {
   trackNumber: string = '';
 
   @Column()
-  albumId: number;
+  releaseId: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -33,7 +33,7 @@ export class Tracks {
   @Column()
   UpdatedAt: Date;
 
-@ManyToOne(() => Album, album => album.tracks)
-album: Album;
+  @ManyToOne(() => Release, release => release.tracks)
+  release: Release;
 
 }

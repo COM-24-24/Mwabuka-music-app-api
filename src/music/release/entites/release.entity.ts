@@ -4,10 +4,10 @@ import { Column,
         CreateDateColumn,
         OneToMany 
     } from 'typeorm';
-import { Tracks } from './tracks.entity';
+import { Tracks } from '../../tracks/entities/tracks.entity';
 
-@Entity('albums')
-export class Album {
+@Entity('release')
+export class Release {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,7 +29,7 @@ export class Album {
   @Column()
   UpdatedAt: Date;
 
-  @OneToMany(() => Tracks, track => track.album)
+  @OneToMany(() => Tracks, track => track.release)
   tracks: Tracks[];
 
 }
