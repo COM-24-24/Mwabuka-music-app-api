@@ -21,13 +21,13 @@ export class Release {
   coverImage: string = '';
 
   @Column()
-  releaseDate: number;
+  releaseDate: string = '';
 
-  @CreateDateColumn()
+  @CreateDateColumn({name: 'CreatedAt'})
   createdAt: Date;
 
-  @Column()
-  UpdatedAt: Date;
+  @CreateDateColumn({name: 'UpdatedAt'})
+  updatedAt: Date;
 
   @OneToMany(() => Tracks, track => track.release)
   tracks: Tracks[];

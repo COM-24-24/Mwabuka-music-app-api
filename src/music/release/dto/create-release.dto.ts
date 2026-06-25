@@ -11,7 +11,7 @@ import { ReleaseStatus } from '../../enums/release-status.enum';
 
 export class CreateReleaseDto {
   @IsString()
-  title: string;
+  title!: string;
 
   @IsOptional()
   @IsString()
@@ -25,7 +25,7 @@ export class CreateReleaseDto {
   coverImage?: string;
 
   @IsDateString()
-  releaseDate: string;
+  releaseDate!: string;
 
   @IsEnum(ReleaseStatus)
   status!: ReleaseStatus;

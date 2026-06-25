@@ -16,22 +16,22 @@ export class Tracks {
   title: string = '';
 
   @Column()
-  duration: string = '';
+  duration: number = 0;
 
   @Column()
   audioUrl: string = '';
 
   @Column()
-  trackNumber: string = '';
+  trackNumber: number = 0;
 
   @Column()
   releaseId: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({name: 'CreatedAt'})
   createdAt: Date;
 
-  @Column()
-  UpdatedAt: Date;
+  @CreateDateColumn({name: 'UpdatedAt'})
+  updatedAt: Date;
 
   @ManyToOne(() => Release, release => release.tracks)
   release: Release;

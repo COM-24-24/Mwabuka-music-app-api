@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ReleaseModule } from './music/release/release.module';
+import { TracksModule } from './music/tracks/tracks.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReleaseModule } from './music/release/release.module';
     UsersModule,
     AuthModule,
     ReleaseModule,
+    TracksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
