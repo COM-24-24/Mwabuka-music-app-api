@@ -6,6 +6,7 @@ import { Column,
         ManyToOne
     } from 'typeorm';
 import { Release } from '../../release/entites/release.entity';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Entity('tracks')
 export class Tracks {
@@ -26,6 +27,9 @@ export class Tracks {
 
   @Column()
   releaseId: number;
+
+  @OneToMany(() => Favorite, (favorite) => favorite.track)
+  favorites!: Favorite[];
 
   @CreateDateColumn({name: 'CreatedAt'})
   createdAt: Date;

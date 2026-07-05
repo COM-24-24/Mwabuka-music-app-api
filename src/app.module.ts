@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users} from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ReleaseModule } from './music/release/release.module';
 import { TracksModule } from './music/tracks/tracks.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import { TracksModule } from './music/tracks/tracks.module';
     AuthModule,
     ReleaseModule,
     TracksModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
