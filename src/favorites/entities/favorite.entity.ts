@@ -1,9 +1,10 @@
-import {Entity, 
-        PrimaryGeneratedColumn,
-        Column,
-        CreateDateColumn,
-        ManyToOne
-    } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { Tracks } from '../../music/tracks/entities/tracks.entity';
 
