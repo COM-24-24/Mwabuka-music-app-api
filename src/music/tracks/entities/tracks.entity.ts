@@ -1,12 +1,13 @@
-import { Column,
-        Entity, 
-        PrimaryGeneratedColumn, 
-        CreateDateColumn,
-        OneToMany,  
-        ManyToOne
-    } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
 import { Release } from '../../release/entites/release.entity';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
+import { Favorite } from '../../../favorites/entities/favorite.entity';
 
 @Entity('tracks')
 export class Tracks {
@@ -31,13 +32,12 @@ export class Tracks {
   @OneToMany(() => Favorite, (favorite) => favorite.track)
   favorites!: Favorite[];
 
-  @CreateDateColumn({name: 'CreatedAt'})
+  @CreateDateColumn({ name: 'CreatedAt' })
   createdAt: Date;
 
-  @CreateDateColumn({name: 'UpdatedAt'})
+  @CreateDateColumn({ name: 'UpdatedAt' })
   updatedAt: Date;
 
-  @ManyToOne(() => Release, release => release.tracks)
+  @ManyToOne(() => Release, (release) => release.tracks)
   release: Release;
-
 }

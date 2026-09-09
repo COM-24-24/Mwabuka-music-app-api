@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotifyController } from './notify.controller';
+import { NotifyService } from './notify.service';
 
 describe('NotifyController', () => {
   let controller: NotifyController;
@@ -7,6 +8,12 @@ describe('NotifyController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotifyController],
+      providers: [
+        {
+          provide: NotifyService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     controller = module.get<NotifyController>(NotifyController);

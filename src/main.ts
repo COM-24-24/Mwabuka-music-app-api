@@ -22,6 +22,9 @@ async function bootstrap() {
 
   const reflector = app.get(Reflector);
 
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalGuards(new RolesGuard(reflector));
+
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Audio Streaming API')

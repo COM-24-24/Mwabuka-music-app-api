@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { ReleaseModule } from './music/release/release.module';
 import { TracksModule } from './music/tracks/tracks.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { NotifyModule } from './notifications/notify.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FavoritesModule } from './favorites/favorites.module';
     ReleaseModule,
     TracksModule,
     FavoritesModule,
+    NotifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

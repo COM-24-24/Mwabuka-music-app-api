@@ -36,6 +36,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Roles(Role.Admin)
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'List of all users' })
