@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './entity/notification.entity';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { Users } from '../users/entities/user.entity';
 
 @Injectable()
@@ -15,27 +14,82 @@ export class NotifyService {
     private readonly usersRepository: Repository<Users>,
   ) {}
 
-  async create(
+  async createForUser(
+    userId: number,
     createNotificationDto: CreateNotificationDto,
   ): Promise<Notification> {
     const user = await this.usersRepository.findOne({
-      where: { id: createNotificationDto.userId },
+      where: { id: userId },
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `User with id ${createNotificationDto.userId} not found`,
-      );
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
 
-    const notification = this.notificationRepository.create({
-      title: createNotificationDto.title,
-      message: createNotificationDto.message,
-      type: createNotificationDto.type,
-      user,
+    return this.notificationRepository.save(
+      this.notificationRepository.create({
+        title: createNotificationDto.title,
+        message: createNotificationDto.message,
+        type: createNotificationDto.type,
+        user,
+      }),
+    );
+  }
+
+  async createAnnouncement(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<Notification[]> {
+    const users = await this.usersRepository.find();
+    const notifications = users.map((user) =>
+      this.notificationRepository.create({
+        title: createNotificationDto.title,
+        message: createNotificationDto.message,
+        type: createNotificationDto.type,
+        user,
+      }),
+    );
+
+    return this.notificationRepository.save(notifications);
+  }
+
+  async findForUser(userId: number): Promise<Notification[]> {
+    return this.notificationRepository.find({
+      where: { user: { id: userId } },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async markAsRead(
+    userId: number,
+    notificationId: number,
+  ): Promise<Notification> {
+    const notification = await this.findOneForUser(userId, notificationId);
+    notification.isRead = true;
+    return this.notificationRepository.save(notification);
+  }
+
+  async removeForUser(
+    userId: number,
+    notificationId: number,
+  ): Promise<{ message: string }> {
+    const notification = await this.findOneForUser(userId, notificationId);
+    await this.notificationRepository.remove(notification);
+    return { message: `Notification ${notificationId} deleted successfully` };
+  }
+
+  private async findOneForUser(
+    userId: number,
+    notificationId: number,
+  ): Promise<Notification> {
+    const notification = await this.notificationRepository.findOne({
+      where: { id: notificationId, user: { id: userId } },
     });
 
-    return this.notificationRepository.save(notification);
+    if (!notification) {
+      throw new NotFoundException(`Notification ${notificationId} not found`);
+    }
+
+    return notification;
   }
 
   async findAll(): Promise<Notification[]> {
@@ -56,15 +110,6 @@ export class NotifyService {
     }
 
     return notification;
-  }
-
-  async update(
-    id: number,
-    updateNotificationDto: UpdateNotificationDto,
-  ): Promise<Notification> {
-    const notification = await this.findOne(id);
-    Object.assign(notification, updateNotificationDto);
-    return this.notificationRepository.save(notification);
   }
 
   async remove(id: number): Promise<{ message: string }> {

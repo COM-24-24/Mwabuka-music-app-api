@@ -7,5 +7,5 @@ export class CreateFavoriteDto {
     example: 1,
   })
   @IsNumber()
-  track!: number;
+  trackId!: number;
 }

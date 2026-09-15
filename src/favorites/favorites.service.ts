@@ -57,7 +57,10 @@ export class FavoritesService {
     });
   }
 
-  async removeFavorite(userId: number, trackId: number): Promise<void> {
+  async removeFavorite(
+    userId: number,
+    trackId: number,
+  ): Promise<{ message: string }> {
     const favorite = await this.favoriteRepository.findOne({
       where: { user: { id: userId }, track: { id: trackId } },
     });
@@ -68,6 +71,8 @@ export class FavoritesService {
       user: { id: userId },
       track: { id: trackId },
     });
+
+    return { message: `Favorite removed successfully` };
   }
 
   async checkFavorite(userId: number, trackId: number): Promise<boolean> {

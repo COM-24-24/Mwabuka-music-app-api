@@ -45,7 +45,7 @@ export class Users {
     example: 'fan',
   })
   @Column({
-    default: 'fan',
+    default: Role.Fan,
   })
   role!: Role;
 

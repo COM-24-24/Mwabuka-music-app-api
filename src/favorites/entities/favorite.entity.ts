@@ -1,7 +1,6 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   CreateDateColumn,
   ManyToOne,
 } from 'typeorm';
@@ -11,14 +10,14 @@ import { Tracks } from '../../music/tracks/entities/tracks.entity';
 @Entity('favorites')
 export class Favorite {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ManyToOne(() => Users, (user) => user.favorites)
-  user: Users;
+  user!: Users;
 
   @ManyToOne(() => Tracks, (track) => track.favorites)
-  track: Tracks;
+  track!: Tracks;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }

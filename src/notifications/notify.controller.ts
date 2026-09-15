@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -16,10 +16,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { NotifyService } from './notify.service';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { Role } from 'src/auth/User Roles/roles.enum';
 import { Roles } from 'src/auth/User Roles/roles.decorator';
+
+type AuthenticatedUser = {
+  id: number;
+};
 
 @ApiTags('notifications')
 @Controller('notify')
@@ -28,25 +32,24 @@ export class NotifyController {
   constructor(private readonly notifyService: NotifyService) {}
 
   @Roles(Role.Admin)
-  @Post()
+  @Post('announcement')
   @ApiOperation({ summary: 'Create a notification' })
   @ApiResponse({
     status: 201,
     description: 'Notification created successfully',
   })
-  @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({
     status: 403,
     description: 'Only admins can create notifications',
   })
-  create(@Body() createNotificationDto: CreateNotificationDto) {
-    return this.notifyService.create(createNotificationDto);
+  createAnnouncement(@Body() createNotificationDto: CreateNotificationDto) {
+    return this.notifyService.createAnnouncement(createNotificationDto);
   }
 
   @Roles(Role.Admin)
   @Get()
-  @ApiOperation({ summary: 'Get all notifications' })
-  @ApiResponse({ status: 200, description: 'List of notifications' })
+  @ApiOperation({ summary: 'Get all notifications (admin)' })
+  @ApiResponse({ status: 200, description: 'List of all notifications' })
   @ApiResponse({
     status: 403,
     description: 'Only admins can view notifications',
@@ -56,42 +59,40 @@ export class NotifyController {
   }
 
   @Roles(Role.Admin, Role.Fan)
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a notification by ID' })
-  @ApiParam({ name: 'id', type: 'number', description: 'Notification ID' })
-  @ApiResponse({ status: 200, description: 'Notification found' })
-  @ApiResponse({ status: 404, description: 'Notification not found' })
+  @Get('mine')
+  @ApiOperation({ summary: 'Get my notifications' })
+  @ApiResponse({ status: 200, description: 'List of your notifications' })
   @ApiResponse({
     status: 403,
-    description: 'Only admins and fans can view notifications',
+    description: 'Only authenticated users can view notifications',
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.notifyService.findOne(id);
+  findMine(@CurrentUser() user: AuthenticatedUser) {
+    return this.notifyService.findForUser(user.id);
   }
 
-  @Roles(Role.Admin)
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a notification' })
+  @Roles(Role.Admin, Role.Fan)
+  @Patch(':id/read')
+  @ApiOperation({ summary: 'Mark my notification as read' })
   @ApiParam({ name: 'id', type: 'number', description: 'Notification ID' })
   @ApiResponse({
     status: 200,
-    description: 'Notification updated successfully',
+    description: 'Notification marked as read',
   })
   @ApiResponse({ status: 404, description: 'Notification not found' })
   @ApiResponse({
     status: 403,
-    description: 'Only admins can update notifications',
+    description: 'Only the notification owner can mark it as read',
   })
-  update(
+  markAsRead(
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateNotificationDto: UpdateNotificationDto,
   ) {
-    return this.notifyService.update(id, updateNotificationDto);
+    return this.notifyService.markAsRead(user.id, id);
   }
 
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Fan)
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a notification' })
+  @ApiOperation({ summary: 'Delete my notification' })
   @ApiParam({ name: 'id', type: 'number', description: 'Notification ID' })
   @ApiResponse({
     status: 200,
@@ -100,9 +101,12 @@ export class NotifyController {
   @ApiResponse({ status: 404, description: 'Notification not found' })
   @ApiResponse({
     status: 403,
-    description: 'Only admins can delete notifications',
+    description: 'Only the notification owner can delete it',
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.notifyService.remove(id);
+  remove(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.notifyService.removeForUser(user.id, id);
   }
 }

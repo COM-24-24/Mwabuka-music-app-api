@@ -4,14 +4,10 @@ import { ReleaseService } from './release.service';
 import { ReleaseController } from './release.controller';
 import { Release } from './entites/release.entity';
 import { Tracks } from '../tracks/entities/tracks.entity';
+import { NotifyModule } from '../../notifications/notify.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      Release,
-      Tracks,
-    ]),
-  ],
+  imports: [NotifyModule, TypeOrmModule.forFeature([Release, Tracks])],
   controllers: [ReleaseController],
   providers: [ReleaseService],
 })
