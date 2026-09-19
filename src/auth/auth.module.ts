@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { NotifyModule } from '../notifications/notify.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       envFilePath: '.env',
     }),
     forwardRef(() => UsersModule),
+    NotifyModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
